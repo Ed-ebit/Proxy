@@ -4,12 +4,18 @@
     {
         public static void Main()
         {
-            Accounts accountA = new Accounts();
-            Accounts accountB = new Accounts();
             Random rnd = new Random();
-            accountA.Balance = rnd.NextDouble() * 1000 + rnd.NextDouble() * 10;
-            accountB.Balance = rnd.NextDouble() * 1000 + rnd.NextDouble() * 10;
-            PaymentCard KreditKarte = new PaymentCard(accountA, accountB);
+            List<Accounts> accountList = new List<Accounts>();
+            int accountsNumber = rnd.Next(15);
+            for (int i = 1; i <= accountsNumber; i++)
+            {
+                accountList.Add(new Accounts()
+                {
+                    Id = i,
+                    Balance = rnd.NextDouble() * 1000
+                });
+            }
+            PaymentCard KreditKarte = new PaymentCard(accountList);
 
             // set AccountBalances
 

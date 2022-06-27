@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Proxy
 {
-    internal class Accounts
+    public class Accounts
     {
         public double Balance { get; set; }
-
+        public int Id { get; set; }
 
     }
 }

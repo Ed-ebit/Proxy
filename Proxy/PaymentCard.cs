@@ -8,27 +8,32 @@ namespace Proxy
 {
     public class PaymentCard
     {
-        Accounts? AccountA { get; } // um beliebig viele Accounts erweitern?
-        Accounts? AccountB { get; }
+        readonly List<Accounts> Accounts;
 
-        public PaymentCard(Accounts? accountA, Accounts? accountB)
+        public PaymentCard(List<Accounts> accounts)
         {
-            this.AccountA = accountA;
-            this.AccountB = accountB;
+            this.Accounts = accounts;
         }
 
         public void Pay(double price)
         {
-            Console.WriteLine("Kontostand Konto A: "+AccountA.Balance + "\n" +
-                "Kontostand Konto B: "+AccountB.Balance);
-            double percentsAccountA = AccountA.Balance/(AccountA.Balance + AccountB.Balance);
-            double percentsAccountB = AccountB.Balance / (AccountA.Balance + AccountB.Balance);
-            double paidMoney = percentsAccountA * price + percentsAccountB * price;
-            AccountA.Balance = AccountA.Balance - percentsAccountA * price;
-            AccountB.Balance = AccountB.Balance - percentsAccountB * price;
-            Console.WriteLine("bezahlt: "+paidMoney);
-            Console.WriteLine("Kontostand Konto A: " + AccountA.Balance + "\n" +
-                "Kontostand Konto B: " + AccountB.Balance);
+            List<Accounts> thickMoneyAccounts = Accounts
+                .FindAll((account) => account.Balance > 0);
+
+            double total = thickMoneyAccounts
+                .Aggregate(0d,(current,account)=> current+account.Balance);
+
+            double moneyPaid = 0;
+            foreach (Accounts account in thickMoneyAccounts)
+            {
+                Console.WriteLine( $"account ID: {account.Id}\n Balance: {account.Balance}");
+                double moneyToPay  = account.Balance / total * price;
+                account.Balance = account.Balance - moneyToPay;
+                moneyPaid += moneyToPay;
+                Console.WriteLine($"new Balance: {account.Balance}");
+            }
+
+            Console.WriteLine("bezahlt: "+ moneyPaid);
 
         }
 

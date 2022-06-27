@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Proxy
 {
-    public class PaymentCard
+    public class PaymentCard : IPaynator
     {
         readonly List<Accounts> Accounts;
 
@@ -26,11 +26,9 @@ namespace Proxy
             double moneyPaid = 0;
             foreach (Accounts account in thickMoneyAccounts)
             {
-                Console.WriteLine( $"account ID: {account.Id}\n Balance: {account.Balance}");
                 double moneyToPay  = account.Balance / total * price;
-                account.Balance = account.Balance - moneyToPay;
+                account.Pay(moneyToPay);
                 moneyPaid += moneyToPay;
-                Console.WriteLine($"new Balance: {account.Balance}");
             }
 
             Console.WriteLine("bezahlt: "+ moneyPaid);
